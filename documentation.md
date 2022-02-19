@@ -28,7 +28,7 @@ Jenkins was configured as follows:
 - A **Pipeline** was added for the code build. In this pipeline, we perform the following steps:
     - The Jenkins Slave (in our case, the deployment environment), clones the repository code as the initial step. 
     - ```npm install``` is performed over the code folder. 
-    - The application is packed in pushed to the artifacts repository.
+    - The application is packed, and then pushed to the artifacts repository.
     - Jenkinsfile:
 ```       
 timestamps 
