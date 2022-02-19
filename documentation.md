@@ -10,7 +10,7 @@
     - Both files are part of the repository. Details of implementation are in the next section
 
   - Repository on github, URL: https://github.com/JoelBarrantes/timeoff-management-application
-  - For the artifacts, a  **Nexus** was used.
+  - For the artifacts, a  **Nexus** artifact repository was used.
 
 
 ## Details of implementation
