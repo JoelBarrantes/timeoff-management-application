@@ -217,3 +217,6 @@ The configuration as a Jenkins Slave is also done via this configuration:
 - The agent is executed with java, unattached from the main process.
     
 
+### Security
+
+The sensible data, such as login credentials and tokens, is handled via environment variables in the HOST or Jenkins Credentials. There is not any hard-coded credentials in the configuration files
