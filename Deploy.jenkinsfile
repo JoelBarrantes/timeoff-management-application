@@ -1,0 +1,26 @@
+
+       
+timestamps 
+{	
+
+    node('deployagent') {
+		
+		dir('package') {
+            sh 'pkill node || true'
+            cleanWs()
+        }
+        stage('Deploy'){
+
+            httpRequest outputFile: 'drop.tgz', responseHandle: 'NONE', url: 'http://10.0.2.2:8081/repository/Artifactory/TimeOff-Management/TimeOff-Management-.tgz', wrapAsMultipart: false
+            sh 'tar -xvf drop.tgz'
+            dir('package') {
+
+                sh 'JENKINS_NODE_COOKIE=dontKillMe nohup npm start &'
+
+                    
+            }
+                
+        }
+                
+    }
+}

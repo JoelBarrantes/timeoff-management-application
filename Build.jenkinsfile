@@ -1,0 +1,53 @@
+
+       
+timestamps 
+{	
+
+    node('buildagent') {
+		
+        stage('Pull repository')
+        {
+            cleanWs()
+            git credentialsId: 'SSHKey', url: 'https://github.com/JoelBarrantes/timeoff-management-application'          
+        }
+
+        
+        stage('npm Publish'){
+
+            sh 'npm install'
+            sh 'npm install npm-pack-all'
+            sh 'node node_modules/.bin/npm-pack-all'
+            def version = sh(returnStdout: true, script:'node -p "require(\'./package.json\').version"')
+            echo "${version}"
+            sh 'cp *.tgz drop.tgz'
+            nexusArtifactUploader(
+                nexusVersion: 'nexus3',
+                protocol: 'http',
+                nexusUrl: '10.0.2.2:8081/',
+                repository: 'Artifactory',
+                version: version,
+                credentialsId: 'nexus',
+                artifacts: [
+                    [artifactId: "TimeOff-Management",
+                    classifier: '',
+                    file: "TimeOff.Management-"+version+".tgz",
+                    type: "tgz"]
+                ])
+            nexusArtifactUploader(
+                nexusVersion: 'nexus3',
+                protocol: 'http',
+                nexusUrl: '10.0.2.2:8081/',
+                repository: 'Artifactory',
+                credentialsId: 'nexus',
+                artifacts: [
+                    [artifactId: "TimeOff-Management",
+                    classifier: '',
+                    file: "drop.tgz",
+                    type: "tgz"]
+                ])
+            
+        
+        }
+                
+    }
+}

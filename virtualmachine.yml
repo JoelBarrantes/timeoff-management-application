@@ -1,0 +1,66 @@
+- hosts: all
+  gather_facts: yes
+
+
+  tasks:
+    - name: add signature
+      become: yes
+      apt_key:
+        url: "https://deb.nodesource.com/gpgkey/nodesource.gpg.key"
+        state: present
+
+    - name: add repository
+      become: yes
+      apt_repository:
+        repo: "deb https://deb.nodesource.com/node_14.x bionic main"
+        state: present
+        update_cache: yes
+
+    - name: apt install nodejs
+      become: yes
+      apt:
+        name: nodejs
+        state: present  
+
+    - name: apt install gcc
+      become: yes
+      apt:
+        name: gcc
+        state: present
+
+    - name: apt install g++
+      become: yes
+      apt:
+        name: g++
+        state: present  
+
+    - name: apt install sqlite3
+      become: yes
+      apt:
+        name: sqlite3
+        state: present
+    
+    - name: apt install java
+      become: yes
+      apt:
+        name: default-jre
+        state: present
+    
+    - name: Download Agent from Jenkins Server
+      get_url: 
+        url: http://10.0.2.2:8080/jnlpJars/agent.jar
+        dest: /tmp/agent.jar
+    
+    - name: Create agent directory
+      ansible.builtin.file:
+        path: /tmp/workspace
+        state: directory
+
+    - name: Run Slave Agent
+      shell: "nohup java -jar agent.jar -jnlpUrl http://10.0.2.2:8080/computer/Slave%20Node/jenkins-agent.jnlp -secret {{ jenkins_secret }} -workDir /tmp/workspace </dev/null >/dev/null 2>&1 &"
+      args: 
+        chdir: /tmp/
+
+
+
+    
